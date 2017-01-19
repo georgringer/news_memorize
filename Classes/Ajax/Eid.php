@@ -50,7 +50,7 @@ class Eid
 
             $user = $this->initUser();
 
-            $list = $user->getSessionData(self::SESSION_KEY);
+            $list = $this->getUserSessionData($user);
             if (!empty($list)) {
                 $list = json_decode($list, true);
             } else {
@@ -73,7 +73,7 @@ class Eid
 
             $user = $this->initUser();
 
-            $list = $user->getSessionData(self::SESSION_KEY);
+            $list = $this->getUserSessionData($user);
             if (!empty($list)) {
                 $list = json_decode($list, true);
             }
@@ -97,11 +97,16 @@ class Eid
         $this->checkIfUserIsLoggedIn();
         $data = [];
         $user = $this->initUser();
-        $sessionData = $user->getSessionData(self::SESSION_KEY);
+        $sessionData = $this->getUserSessionData($user);
         if (!empty($sessionData)) {
             $data = json_decode($sessionData, true);
         }
         echo json_encode($data);
+    }
+
+    protected function getUserSessionData(FrontendUserAuthentication $user)
+    {
+        return $user->getKey('user', self::SESSION_KEY);
     }
 
     protected function clearAll()
