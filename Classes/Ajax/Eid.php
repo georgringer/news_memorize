@@ -59,7 +59,7 @@ class Eid
 
             if (!in_array($newId, $list)) {
                 $list[] = $newId;
-                $user->setAndSaveSessionData(self::SESSION_KEY, json_encode($list));
+                $this->save(json_encode($list));
             }
         }
     }
@@ -82,7 +82,7 @@ class Eid
                 unset($list[$key]);
                 // keep order
                 $list = array_values($list);
-                $user->setAndSaveSessionData(self::SESSION_KEY, json_encode($list));
+                $this->save(json_encode($list));
             }
         }
     }
@@ -109,10 +109,15 @@ class Eid
         return $user->getKey('user', self::SESSION_KEY);
     }
 
-    protected function clearAll()
+    protected function save($data)
     {
         $user = $this->initUser();
-        $user->setAndSaveSessionData(self::SESSION_KEY, '');
+        $user->setAndSaveSessionData(self::SESSION_KEY, $data, 'user');
+    }
+
+    protected function clearAll()
+    {
+        $this->save('');
     }
 
     protected function checkIfUserIsLoggedIn()
