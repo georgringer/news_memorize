@@ -112,7 +112,8 @@ class Eid
     protected function save($data)
     {
         $user = $this->initUser();
-        $user->setAndSaveSessionData(self::SESSION_KEY, $data, 'user');
+        $user->setKey('user', self::SESSION_KEY, $data);
+        $user->storeSessionData();
     }
 
     protected function clearAll()
