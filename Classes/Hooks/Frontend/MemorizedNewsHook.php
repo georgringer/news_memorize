@@ -23,8 +23,12 @@ class MemorizedNewsHook {
         $action = $demand->getAction();
         if ($action === 'GeorgRinger\News\Controller\NewsController::memorizeListAction' && is_object($GLOBALS['TSFE'])) {
             $idList = $this->getList();
-
-            $constraints[] = $query->in('uid', $idList);
+            // empty list should never return anything
+            if (empty($idList)) {
+                $constraints[] = $query->equals('pid', -3);
+            } else {
+                $constraints[] = $query->in('uid', $idList);
+            }
         }
     }
 
@@ -32,7 +36,7 @@ class MemorizedNewsHook {
         /** @var FrontendUserAuthentication $user */
         $user = $GLOBALS['TSFE']->fe_user;
 
-        $list = $user->getSessionData(self::SESSION_KEY);
+        $list = $user->getKey('user', self::SESSION_KEY);
         $list = json_decode($list, true);
 
         return $list;
